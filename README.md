@@ -110,7 +110,7 @@ $ aws dynamodb create-table \
     --endpoint-url http://localhost:8000/ \
     --table-name User \
     --attribute-definitions \
-        AttributeName=UserId,AttributeType=N \
+        AttributeName=UserId,AttributeType=S \
     --key-schema \
         AttributeName=UserId,KeyType=HASH \
     --provisioned-throughput \
@@ -132,12 +132,17 @@ Result:
 
 ```
 
+# Drop the table
+````
+aws dynamodb delete-table --endpoint-url http://localhost:8000 --table-name User
+````
+
 # Interacting with the REST endpoint
 
 Send a PUT Request to http://localhost:8080/
 ```
 {
-    "userId": 1,
+    "userId": "1",
     "firstName": "Heiko",
     "lastName": "Stumpf"
 }
