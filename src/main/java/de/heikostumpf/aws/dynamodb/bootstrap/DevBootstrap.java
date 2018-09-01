@@ -32,17 +32,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     Logger logger = LoggerFactory.getLogger(DevBootstrap.class);
 
     private void initData() {
-        NameGenerator generator = new NameGenerator();
-        List<Name> femaleNames = generator.generateNames( 500, Gender.FEMALE );
-        List<Name> maleNames = generator.generateNames(500, Gender.MALE);
-        List<Name> names = ListUtils.union(femaleNames,maleNames);
 
-        for (Name name : names) {
-            User user = new User();
+        if(userRepository.count() == 0) {
+            NameGenerator generator = new NameGenerator();
+            List<Name> names = generator.generateNames(1000);
 
-            BeanUtils.copyProperties(name, user);
-            logger.info("User:" + user);
-            userRepository.save(user);
+            for (Name name : names) {
+                User user = new User();
+                BeanUtils.copyProperties(name, user);
+                logger.info("User:" + user);
+                userRepository.save(user);
+            }
+        }
+        else {
+            logger.info("Table already contains " + userRepository.count() + " items");
         }
     }
 
@@ -50,8 +53,5 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         initData();
     }
-
-
-
 }
 
